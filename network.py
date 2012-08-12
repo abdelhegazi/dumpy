@@ -158,6 +158,6 @@ for s in stream:
         if tcp.source_port in PORTS or tcp.destination_port in PORTS:
             if tcp.source_port != CONTROL_PORT and tcp.destination_port != CONTROL_PORT:
                 print "="*40, "====>",
-            print tcp.timestamp_TSval, tcp.source_address_and_port, "->", tcp.destination_address_and_port, tcp.flags, tcp.contents
+            print tcp.timestamp_TSval, tcp.source_address_and_port, "->", tcp.destination_address_and_port, tcp.flags, ";".join(tcp.contents.split('\n'))
             #print tcp.sequence_number, tcp.source_address_and_port, "->", tcp.destination_address_and_port, tcp.flags, tcp.contents
 
