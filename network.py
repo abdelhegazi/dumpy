@@ -1,4 +1,17 @@
-from ftp_c import stream
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""Represent raw network data as Python Objects
+
+Although several tools exist to parse network data and let you manipulate that
+data, no tool let's you easily programmatically review that data without
+a deep knowledge of the Network protocols.
+
+Instead, we represent that data as easily accessible objects. This will
+never be the most performant tool. It should, however, be the easiest tool
+to create a quick program for quick analysis of a dataset.
+"""
+
 
 TYPE_IPv4 = 0x0800
 TYPE_TCP = 0x0600
@@ -8,9 +21,37 @@ types = {
     TYPE_TCP: 'TCP',
 }
 
+# From different header files
+ETHERTYPE = 0x0800
+ETHERTYPE_IPV6 = 0x86DD
+ETHERTYPE_PPPOE_SESSION = 0x8864
+
+DLT_NULL = 0         # no link-layer encapsulation
+DLT_EN10MB = 1       # Ethernet (10Mb)
+DLT_EN3MB = 2        # Experimental Ethernet (3Mb)
+DLT_AX25 = 3         # Amateur Radio AX.25
+DLT_PRONET = 4       # Proteon ProNET Token Ring
+DLT_CHAOS = 5        # Chaos
+DLT_IEEE802 = 6      # IEEE 802 Networks
+DLT_ARCNET = 7       # ARCNET
+DLT_SLIP = 8         # Serial Line IP
+DLT_PPP = 9          # Point-to-point Protocol
+DLT_FDDI = 10        # FDDI
+DLT_ATM_RFC1483 = 11 # LLC/SNAP encapsulated atm
+DLT_RAW = 12         # raw IP
+DLT_SLIP_BSDOS = 15  # BSD/OS Serial Line IP
+DLT_PPP_BSDOS = 16   # BSD/OS Point-to-point Protocol
+DLT_ATM_CLIP = 19    # Linux Classical-IP over ATM
+DLT_PPP_SERIAL = 50  # PPP over serial with HDLC encapsulation
+DLT_C_HDLC = 104     # Cisco HDLC
+DLT_IEEE802_11 = 105 # IEEE 802.11 wireless
+DLT_LOOP = 108
+DLT_LINUX_SLL = 113
+DLT_APPLE_IP_OVER_IEEE1394 = 138
+DLT_CHDLC = DLT_C_HDLC
+
 
 def make_hex(address):
-    #return "".join([hex(x).replace('0x', '',1) for x in address])
     return "".join(["{0:0>2x}".format(n) for n in address])
 
 def make_hex_long(address):
@@ -144,20 +185,4 @@ class TCP(object):
 
     def __unicode__(self):
         return "{0}".format(1)
-
-
-CONTROL_PORT = 21
-PORTS = [20, 21, 58129, 58130, 68128]
-results = []
-for s in stream:
-    packet = Ethernet(s)
-    if packet.contents is not None:
-        results.append(packet)
-        ip = packet.contents
-        tcp = ip.contents
-        if tcp.source_port in PORTS or tcp.destination_port in PORTS:
-            if tcp.source_port != CONTROL_PORT and tcp.destination_port != CONTROL_PORT:
-                print "="*40, "====>",
-            print tcp.timestamp_TSval, tcp.source_address_and_port, "->", tcp.destination_address_and_port, tcp.flags, ";".join(tcp.contents.split('\n'))
-            #print tcp.sequence_number, tcp.source_address_and_port, "->", tcp.destination_address_and_port, tcp.flags, tcp.contents
 
