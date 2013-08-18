@@ -99,6 +99,7 @@ def read_preamble(f):
 
 
 def parse_file(filename):
+    """Parse file given by filename"""
     results = []
     with open(filename, "rb") as f:
 
